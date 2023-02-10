@@ -39,7 +39,7 @@ f = w/(2*pi)*fn;
 plot(f, abs(FR.^2))
 grid()
 
-state_in = [];
+state_in = []; %buffer
 for k = 1:K
     [audio_in, overrun] = myReader();
     [audio_out, state_in] = filter(B, A, audio_in, state_in);

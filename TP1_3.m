@@ -3,7 +3,7 @@ clc; clear; close all
 N = 512;
 K = 1e4;
 
-myReader = dsp.AudioFileReader("Suzanne_Vega_1000Hz_variable.wav", "SamplesPerFrame", N);
+myReader = dsp.AudioFileReader("Suzanne_Vega_1000Hz.wav", "SamplesPerFrame", N);
 Fs = myReader.SampleRate;
 myWriter = dsp.AudioFileWriter("myOutputTP1_3.wav", "SampleRate", Fs);
 myScope = timescope("SampleRate", Fs, "YLimits", [-1, 1]);
