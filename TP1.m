@@ -13,7 +13,7 @@ for k = 1:K
     [audio_in, overrun] = myReader();
     audio_out = audio_in; %traitement, ici transparent
     %disp(overrun)
-    myWriter(audio_in);
+    myWriter(audio_out);
     myScope([audio_in audio_out])
     mySpec([audio_in audio_out]) %mettre break ici
 end
