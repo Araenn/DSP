@@ -8,9 +8,9 @@ myScope = timescope("SampleRate", Fs, "YLimits", [-1, 1]);
 %mySpec = dsp.SpectrumAnalyzer("SampleRate", Fs, "PlotAsTwoSidedSpectrum", false);
 
 state = [];
-fc = 0.2; %frequence coupure numerique
+fc = 0.02; %frequence coupure numerique
 ordre = 20;
-h = fir1(ordre, 2*fc, "low");
+h = fir1(ordre, 2*fc, "low"); %fpb phase lineaire
 while ~isDone(myReader)
     audio_in = myReader();
     
@@ -23,7 +23,7 @@ while ~isDone(myReader)
 end
 
 figure(1)
-[H, w] = freqz(h, 1, N);
+[H, w] = freqz(h, 1, 1000);
 tftd = abs(H);
 f = w/(2*pi);
 plot(f, tftd)
