@@ -11,42 +11,29 @@ myScope = timescope("SampleRate", Fs, "YLimits", [-1, 1]);
 fp = 4000; %frequence porteuse
 a = 0.05; %constante boucle
 
-fc = 0.02; %frequence coupure numerique
+fc = 0.2; %frequence coupure
 ordre = 20;
-h = fir1(ordre, 2*fc, "low"); %fpb phase lineaire
+h = fir1(ordre, 2*fc/Fs, "low"); %fpb phase lineaire avec frquence coupure numerique
 
 state = [];
 p_old = 0;
 cos_sortie = 0;
 while ~isDone(myReader)
     audio_in = myReader();
-    %porteuse = cos(2*pi*fp*(0:length(audio_in)-1)');
-    
-    signal_module = audio_in ;
-    comp = signal_module .* cos_sortie;
-    [comp, state] = filter(h, 1, comp, state);
-    
-    
-    
-    phi = angle(signal_module);
-    delta = 1/2 * phi;
-    d = a * delta;
-    
-    cos_sortie = cos(pi*(p_old + 2*fp + d));
-    p = p_old + 2*fp;
-    p_old = p;
-    
-    audio_out = comp;
-    
-%     signal_synchro = porteuse' .* cos_sortie;
-%     audio_out = 2 * signal_synchro .* signal_module;
-    
-    
-    
+    signal_module = audio_in;
+    comparateur_phase = signal_module .* cos_sortie; 
+    [comparateur_phase, state] = filter(h, 1, comparateur_phase, state);
+
+    phi = angle(comparateur_phase); % phase du signal apres comparateur de phase et fpb
+    delta = 1/2 * phi; % correction de phase
+    d = a * delta; % phase instantanee
+    cos_sortie = cos(pi*(p_old + 2*fp + d)); % en sortie d'increment de phase
+    p = p_old + 2*fp; %increment de phase
+
+    audio_out =  cos_sortie .* signal_module;
     
     myWriter(audio_out);
     myScope([audio_in audio_out]);
-    %mySpec([audio_in audio_out]); %mettre break ici
     
 end
 
