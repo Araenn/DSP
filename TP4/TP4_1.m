@@ -27,8 +27,7 @@ while ~isDone(myReader)
     for n = 1:length(signal_module)        
         %% PLL
         signal_in = signal_module(n) .* cos_sortie; 
-        delta = sum(h.*signal_in); %filtrage passe-bas
-        %delta = 0;
+        delta = sum(h.*signal_in); %sortie du filtrage passe-bas
         d = a * delta; % phase instantanee
         p = p_old + 2*fp + d; %increment de phase
         cos_sortie = cos(pi*p); % en sortie d'increment de phase
