@@ -2,10 +2,11 @@ clc; clear; close all
 
 N = 512;
 frequence_sortie = 8000;
+K = 1e4;
 
-myReader = dsp.AudioFileReader("modulation.wav", "SamplesPerFrame", N);
+myReader = audioDeviceReader("SamplesPerFrame", N);
 Fs = myReader.SampleRate;
-myWriter = dsp.AudioFileWriter("demodulation.wav", "SampleRate", frequence_sortie);
+myWriter = audioDeviceWriter("SampleRate", frequence_sortie);
 Scope_in = timescope("SampleRate", Fs, "YLimits", [-1, 1]);
 Spec_in = dsp.SpectrumAnalyzer("SampleRate", Fs, "PlotAsTwoSidedSpectrum", false);
 
@@ -40,7 +41,7 @@ figure(1)
 plot(f, tftd_filtreDemod)
 grid()
 
-while ~isDone(myReader)
+for k = 1:K
     audio_in = myReader();
     signal_echant = audio_in;
     signal_demodule = zeros(size(audio_in));

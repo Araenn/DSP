@@ -2,10 +2,11 @@ clc; clear; close all
 
 N = 512;
 frequence_sortie = 48000;
+K = 1e4;
 
-myReader = dsp.AudioFileReader("Meteo_8k.wav", "SamplesPerFrame", N);
+myReader = audioDeviceReader("SamplesPerFrame", N);
 Fs = myReader.SampleRate;
-myWriter = dsp.AudioFileWriter("modulation.wav", "SampleRate", frequence_sortie);
+myWriter = audioDeviceWriter("SampleRate", frequence_sortie);
 Scope_in = timescope("SampleRate", Fs, "YLimits", [-1, 1]);
 Spec_in = dsp.SpectrumAnalyzer("SampleRate", Fs, "PlotAsTwoSidedSpectrum", false);
 
@@ -25,7 +26,7 @@ fc = 1/(2*M);
 h = fir1(576, 2*fc, "low");
 state = [];
 gmax = 1;
-while ~isDone(myReader)
+for k = 1:K
     audio_in = myReader();
     audio_out = zeros(N*M, 1);
     %% sur echantillonnage
