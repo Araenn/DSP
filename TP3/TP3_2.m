@@ -15,8 +15,8 @@ Ly = 0.5; %cible du gain en sortie
 gmax = 100; %valeur max du gain
 
 lv_old = 0;
-f = waitbar(lv_old, "Debut")
-pause(0.5)
+f = waitbar(lv_old, "Debut");
+pause(0.5);
 while ~isDone(myReader)
     audio_in = myReader();
     
@@ -34,15 +34,14 @@ while ~isDone(myReader)
     
     
     
-    waitbar(mean(lv)^(1/4), f, "Level") %affichage du niveau avec waitbar
-    pause(0.01)
-    myWriter(audio_out)
-    myScope([audio_in lv audio_out])
-    mySpec([audio_in lv audio_out]) %mettre break ici
+    waitbar(mean(lv)^(1/4), f, "Level"); %affichage du niveau avec waitbar
+    myWriter(audio_out);
+    myScope([audio_in lv audio_out]);
+    mySpec([audio_in lv audio_out]); %mettre break ici
     
 end
 
-close(f)
+close(f);
 release(myScope);
 release(mySpec);
 release(myReader);
