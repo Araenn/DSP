@@ -18,7 +18,7 @@ p_old = 0;
 cos_sortie = 0;
 sin_sortie = 0;
 
-M = frequence_sortie/Fs;
+M = round(frequence_sortie/Fs);
 Scope_out = timescope("SampleRate", frequence_sortie, "YLimits", [-1, 1]);
 Spec_out = dsp.SpectrumAnalyzer("SampleRate", frequence_sortie, "PlotAsTwoSidedSpectrum", false);
 

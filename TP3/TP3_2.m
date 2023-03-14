@@ -1,11 +1,18 @@
 clc; clear; close all
 
 N = 512;
+K = 1e4;
 myReader = dsp.AudioFileReader("Suzanne_Vega_44_mono.wav", "SamplesPerFrame", N);
 Fs = myReader.SampleRate;
 myWriter = dsp.AudioFileWriter("myOutput.wav", "SampleRate", Fs);
 myScope = timescope("SampleRate", Fs, "YLimits", [-1, 1]);
 mySpec = dsp.SpectrumAnalyzer("SampleRate", Fs, "PlotAsTwoSidedSpectrum", false);
+
+% myReader = audioDeviceReader("SamplesPerFrame", N);
+% Fs = myReader.SampleRate;
+% myWriter = audioDeviceWriter("SampleRate", Fs);
+% myScope = timescope("SampleRate", Fs, "YLimits", [-1, 1]);
+% mySpec = dsp.SpectrumAnalyzer("SampleRate", Fs, "PlotAsTwoSidedSpectrum", false);
 
 t_M = 1e-3; %temps de montee
 t_D = 100e-3; %temps de descente
@@ -41,7 +48,7 @@ while ~isDone(myReader)
     
 end
 
-close(f);
+close(f)
 release(myScope);
 release(mySpec);
 release(myReader);

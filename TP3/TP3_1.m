@@ -10,7 +10,7 @@ mySpec = dsp.SpectrumAnalyzer("SampleRate", Fs, "PlotAsTwoSidedSpectrum", false)
 t_M = 1e-3; %s
 t_D = 100e-3;
 a_M = 1 - exp(-2.2/(t_M * Fs));
-a_D = exp(-2.2/(t_M * Fs));
+a_D = exp(-2.2/(t_D * Fs));
 
 lv_old = 0;
 f = waitbar(lv_old, "Debut")
