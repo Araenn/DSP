@@ -14,6 +14,7 @@ alpha = 0.01;
 
 
 p_old = 0;
+cos_sortie = 0;
 sin_sortie = 0;
 
 M = frequence_sortie/Fs;
@@ -39,6 +40,7 @@ while ~isDone(myReader)
         
         %% PLL
         p = p_old + 2*fp; %increment de phase
+        cos_sortie = cos(pi*p); % en sortie d'increment de phase
         sin_sortie = sin(pi*p);
         
         p_old = p;

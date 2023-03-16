@@ -10,18 +10,15 @@ Scope_in = timescope("SampleRate", Fs, "YLimits", [-1, 1]);
 Spec_in = dsp.SpectrumAnalyzer("SampleRate", Fs, "PlotAsTwoSidedSpectrum", false);
 
 fp = 4000/Fs; %frequence porteuse
-a = 0.05; %constante boucle
-alpha = 0.01;
 
 fc_fpb = 0.2; %frequence coupure fpb
 ordre = 20;
 h_fpb = fir1(ordre, 2*fc_fpb/Fs, "low"); %fpb phase lineaire avec frquence coupure numerique
 
-p_old = 0;
-cos_sortie = 0;
-sin_sortie = 0;
-comparateur_phase = zeros(N, 1);
+p = 0;
 audio_out = zeros(N, 1);
+
+a = 0.05;
 
 M = Fs/frequence_sortie;
 Scope_out = timescope("SampleRate", frequence_sortie, "YLimits", [-1, 1]);
@@ -36,6 +33,8 @@ filtre_demod = fir1(256, 2*fp, "low");
 tftd_filtreDemod = abs(H);
 f = w/(2*pi)*Fs;
 
+buffer = zeros(N, 1);
+
 figure(1)
 plot(f, tftd_filtreDemod)
 grid()
@@ -47,22 +46,22 @@ while ~isDone(myReader)
     
     for n = 1:length(signal_echant) 
         %% PLL
-        signal_in = signal_echant(n) .* cos_sortie; 
-        delta = sum(h_fpb.*signal_in); %sortie du filtrage passe-bas
-        d = 0; % phase instantanee
-        p = p_old + 2*fp + d; %increment de phase
         cos_sortie = cos(pi*p); % en sortie d'increment de phase
         sin_sortie = sin(pi*p);
-        
-        p_old = p;
+        signal_in = signal_echant(n) .* cos_sortie; 
+        buffer(1:N-1) = buffer(2:N);
+        buffer(n) = signal_in;
+        delta = sum(h_fpb.*buffer(n)); %sortie du filtrage passe-bas
+        d = a*delta; % phase instantanee
+        p = p + 2*fp + d; %increment de phase
         
         %% demodulation
         signal_demodule(n) = signal_echant(n) .* sin_sortie;
         
     end
-    audio_out = signal_demodule - mean(signal_demodule); % met composante continue du signal nulle
-    [audio_out, state] = filter(filtre_demod, 1, audio_out, state);
-    audio_out = audio_out(1:M:end); % sous echantillonnage
+    [signal_demodule, state] = filter(filtre_demod, 1, signal_demodule, state);
+    signal_demodule = signal_demodule - mean(signal_demodule); % met composante continue du signal nulle
+    audio_out = signal_demodule(1:M:end);
     
     myWriter(audio_out);
     Scope_in(audio_in);

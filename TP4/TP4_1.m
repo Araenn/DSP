@@ -18,7 +18,6 @@ h = fir1(ordre, 2*fc/Fs, "low"); %fpb phase lineaire avec frquence coupure numer
 p_old = 0;
 cos_sortie = 0;
 sin_sortie = 0;
-comparateur_phase = zeros(N, 1);
 audio_out = zeros(N, 1);
 while ~isDone(myReader)
     audio_in = myReader();
