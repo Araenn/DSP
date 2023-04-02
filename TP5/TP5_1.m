@@ -21,7 +21,8 @@ while ~isDone(myReader)
     Xp = fft(xp);
     state_precedent_in = audio_in;
     
-    y = ifft(Xp);
+    Yp = Xp; %pas de traitement
+    y = ifft(Yp);
     y = fenetre_ponderation .* y;
     
     audio_out = state_precedent_out + y(1:N);
